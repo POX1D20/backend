@@ -25,63 +25,63 @@ class answersController {
     }
 
     //PUT
-    async editAnswers(req, res) {
-        const answers = req.body
+    // async editAnswers(req, res) {
+    //     const answers = req.body
 
-        for (let i = 0; i < answers.length; i++) {
-            const { id, id_question, answer, correct_answer } = answers[i]
-            const selectAnswer = await db.query('select * from answers where id = $1', [id])
-            const selectAnswerRow = selectAnswer.rows[0]
+    //     for (let i = 0; i < answers.length; i++) {
+    //         const { id, id_question, answer, correct_answer } = answers[i]
+    //         const selectAnswer = await db.query('select * from answers where id = $1', [id])
+    //         const selectAnswerRow = selectAnswer.rows[0]
 
-            if (
-                selectAnswerRow.answer !== answer ||
-                selectAnswerRow.correct_answer !== correct_answer
-            ) {
-                const updateAnswer = await db.query(
-                    'UPDATE answers SET answer = $1, correct_answer = $2 WHERE id = $3 RETURNING *',
-                    [answer, correct_answer, id]
-                )
-                console.log(updateAnswer.rows)
-            }
-        }
+    //         if (
+    //             selectAnswerRow.answer !== answer ||
+    //             selectAnswerRow.correct_answer !== correct_answer
+    //         ) {
+    //             const updateAnswer = await db.query(
+    //                 'UPDATE answers SET answer = $1, correct_answer = $2 WHERE id = $3 RETURNING *',
+    //                 [answer, correct_answer, id]
+    //             )
+    //             console.log(updateAnswer.rows)
+    //         }
+    //     }
 
-        // res.json(answers)
-    }
+    //     // res.json(answers)
+    // }
 
     //РАБОЧИЙ КОД ДЛЯ POST
-    // async editAnswers(req, res) {
-    //     try {
-    //         const answers = req.body
+    async editAnswers(req, res) {
+        try {
+            const answers = req.body
 
-    //         for (let i = 0; i < answers.length; i++) {
-    //             const { id, id_question, answer, correct_answer } = answers[i]
+            for (let i = 0; i < answers.length; i++) {
+                const { id, id_question, answer, correct_answer } = answers[i]
 
-    //             try {
-    //                 const selectAnswer = await db.query('SELECT * FROM answers WHERE id = $1', [id])
-    //                 const selectAnswerRow = selectAnswer.rows[0]
+                try {
+                    const selectAnswer = await db.query('SELECT * FROM answers WHERE id = $1', [id])
+                    const selectAnswerRow = selectAnswer.rows[0]
 
-    //                 if (
-    //                     selectAnswerRow.answer !== answer ||
-    //                     selectAnswerRow.correct_answer !== correct_answer
-    //                 ) {
-    //                     const updateAnswer = await db.query(
-    //                         'UPDATE answers SET answer = $1, correct_answer = $2 WHERE id = $3 RETURNING *',
-    //                         [answer, correct_answer, id]
-    //                     )
-    //                     console.log(updateAnswer.rows)
-    //                 }
-    //             } catch (error) {
-    //                 console.error(`Error processing answer with id ${id}:`, error)
-    //                 return res.status(500).send(`Error processing answer with id ${id}`)
-    //             }
-    //         }
+                    if (
+                        selectAnswerRow.answer !== answer ||
+                        selectAnswerRow.correct_answer !== correct_answer
+                    ) {
+                        const updateAnswer = await db.query(
+                            'UPDATE answers SET answer = $1, correct_answer = $2 WHERE id = $3 RETURNING *',
+                            [answer, correct_answer, id]
+                        )
+                        console.log(updateAnswer.rows)
+                    }
+                } catch (error) {
+                    console.error(`Error processing answer with id ${id}:`, error)
+                    return res.status(500).send(`Error processing answer with id ${id}`)
+                }
+            }
 
-    //         res.status(200).json({ message: 'Answers updated successfully' })
-    //     } catch (error) {
-    //         console.error('Error updating answers:', error)
-    //         res.status(500).send('A server error occurred while updating answers')
-    //     }
-    // }
+            res.status(200).json({ message: 'Answers updated successfully' })
+        } catch (error) {
+            console.error('Error updating answers:', error)
+            res.status(500).send('A server error occurred while updating answers')
+        }
+    }
 
     //POST
     // async createPrinter(req, res) {
